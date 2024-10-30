@@ -1,0 +1,48 @@
+variables:
+  ENVIRONMENT:
+    value: test
+    options:
+      - test
+      - dev
+      - prod
+      - qarc
+    description: The env to run in the pipeline
+  TEST_TO_RUN:
+    value: tests:api # This is the test/project that will be run by automatically through pipeline triggers
+    options:
+      - tests:api
+      - tests:api_mustpass
+      - tests:api_cart
+      - tests:api_cart_rpu
+      - tests:api_cart_delivery
+      - tests:api_login
+      - tests:api_sample
+    description: The tests to run in the pipeline
+
+stages:
+  - run_test
+  - test
+
+Run Playwright Test:
+  stage: run_test
+  environment: $ENVIRONMENT
+  tags:
+    - build-runner 
+  image: mcr.microsoft.com/playwright:v1.44.1-jammy
+  script:
+    - echo "Running tests for $ENV $BUS_UNIT"
+    - npm ci
+    - npm run $TEST_TO_RUN || true
+  artifacts:
+    when: always
+    expire_in: "7 days"
+    paths:
+      - ./playwright-report/
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == 'true' # Run tests on pushes to protected branches.
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # Run tests on completed merge request.
+    - if: $CI_PIPELINE_SOURCE == 'push' # Run tests push event, including for branches and tags.
+    - if: $CI_PIPELINE_SOURCE == 'web' # Run tests if the build is kicked off manually.
+    - if: $CI_PIPELINE_SOURCE == 'schedule' # Run tests from scheduled events
+    - if: $CI_PIPELINE_SOURCE == 'api' # Run tests from pipeline API calls
+

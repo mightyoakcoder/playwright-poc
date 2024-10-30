@@ -1,9 +1,25 @@
 {
   "name": "playwright-poc",
   "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tests:api": "playwright test --config=playwright.config.ts --project=api",
+    "tests:api_sample": "playwright test --config=playwright.config.ts --project=sample",
+    "tests:api_mustpass": "playwright test --config=playwright.config.ts --project=mustpass",
+    "tests:api_cart": "playwright test --config=playwright.config.ts --project=cart",
+    "tests:api_cart_rpu": "playwright test --config=playwright.config.ts --project=cart_rpu",
+    "tests:api_cart_delivery": "playwright test --config=playwright.config.ts --project=cart_delivery",
+    "tests:api_login": "playwright test --config=playwright.config.ts --project=login"
   },
   "author": "Becky Weeks",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^22.8.4",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  }
 }
